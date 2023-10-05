@@ -1,0 +1,7 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+abdirahman123
+alt+ctrl+l////turbo consle.log
+ctrl+shift+p////codesnap
