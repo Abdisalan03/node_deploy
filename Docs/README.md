@@ -61,73 +61,14 @@ This endpoint is used to log in an existing owner. The request should be a POST 
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJ5YXNrYWFzc28zeUBnbWFpbC5jb20iLCJpYXQiOjE2OTYyMjE4MDgsImV4cCI6MTY5NjIyNTQwOH0.13JEak-uRxX-9x2Wf15Otwee4NJvBwaxXZWsUwhv0sg"
 }
 ```
-If the owner does not exist, a ```404 Not Found```response will be returned. If the password is incorrect, a ```401 Unauthorized``` response will be returned. If the request is successful, a ```200 OK``` response will be returned with a JSON Web Token (JWT) that can be used to authenticate future requests.
-
-### Authentication Middleware
-This middleware function is used to authenticate requests by verifying the JSON Web Token (JWT) included in the Authorization header.
-
-###### Middleware Function:
+If the owner does not exist, a ```404 Not Found```response will be returned. If the password is incorrect, a ```401 Unauthorized``` response will be returned. If the request is successful, a ```200 OK``` response will be returned with a ```JSON``` Web Token (JWT) that can be used to authenticate future requests.
 
 
-```js 
-const authenticate = (req, res, next) => {
-  const token = req.headers.authorization;
 
-  if (!token) {
-    return res
-      .status(401)
-      .json({ status: 401, message: "Authentication failed - missing token" });
-  }
-  
-
-   const tokenWithoutBearer = token.split(" ")[1];
-
-  jwt.verify(tokenWithoutBearer, SECRET_KEY, (error, decoded) => {
-    if (error) {
-      return res
-        .status(401)
-        .json({ status: 401, message: "Authentication failed - invalid token" });
-    }
-
-    req.decoded = decoded;
-
-    next();
-  });
-};
- ```
-
-#### Usage
-To use this middleware, include it in the route handler function before the desired functionality.
-
-
-```js 
- router.get("/protected", authenticate, (req, res) => {
-  // Accessible only if authenticated
-  // Your logic here
-});
-Error Responses
-Status Codes:
-401 - Unauthorized
-401 - Unauthorized
-Missing Token:
-
-{
-  "status": 401,
-  "message": "Authentication failed - missing token"
-}
-```
-
-###### Invalid Token:
-```js 
-{
-  "status": 401,
-  "message": "Authentication failed - invalid token"
-}
-```
-
-##### Bookstore Endpoints:
-Create BookStore
-EndPoint: POST /api/bookstore
+##### Bookstore 
+##### Create BookStore
+**EndPoint**:
+-  ```POST localhost:4000/api/bookstore```
 
 This endpoint is used to create a new bookstore. The request should be a POST request with the following parameters:
 
@@ -216,6 +157,68 @@ This endpoint is used to create a new book. The request should be a POST request
 }
  ``` 
 If the book was not created, a ```400 ``` Bad Request response will be returned. If the request is successful, a  ```200 OK ``` response will be returned with a message indicating that the book was created successfully.
+
+### Authentication Middleware
+This middleware function is used to authenticate requests by verifying the JSON Web Token (JWT) included in the Authorization header.
+
+###### Middleware Function:
+
+
+```js 
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ status: 401, message: "Authentication failed - missing token" });
+  }
+  
+
+   const tokenWithoutBearer = token.split(" ")[1];
+
+  jwt.verify(tokenWithoutBearer, SECRET_KEY, (error, decoded) => {
+    if (error) {
+      return res
+        .status(401)
+        .json({ status: 401, message: "Authentication failed - invalid token" });
+    }
+
+    req.decoded = decoded;
+
+    next();
+  });
+};
+ ```
+
+#### Usage
+To use this middleware, include it in the route handler function before the desired functionality.
+
+
+```js 
+ router.get("/protected", authenticate, (req, res) => {
+  // Accessible only if authenticated
+  // Your logic here
+});
+Error Responses
+Status Codes:
+401 - Unauthorized
+401 - Unauthorized
+Missing Token:
+
+{
+  "status": 401,
+  "message": "Authentication failed - missing token"
+}
+```
+
+###### Invalid Token:
+```js 
+{
+  "status": 401,
+  "message": "Authentication failed - invalid token"
+}
+```
 
 ##### Use Supabase database
 Instead of using SQLite database, change to Supabase by following this instruction:
